@@ -1,0 +1,9 @@
+.page-section { display: flex; flex-direction: column; gap: 1rem; }
+.page-heading { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: .25rem; }
+.page-heading h1 { margin-top: .15rem; font-size: 1.55rem; }
+.section-heading-row { display: flex; align-items: center; justify-content: space-between; gap: .8rem; flex-wrap: wrap; }
+.section-heading-row h2 { margin: 0; font-size: 1.1rem; }
+.section-heading-row p { font-size: .78rem; margin-top: .2rem; }
+.table-heading { margin-bottom: .4rem; }
+.filter-field { width: min(100%, 320px); }
+.empty-cell { padding: 1.5rem !important; color: #75858d; text-align: center; }

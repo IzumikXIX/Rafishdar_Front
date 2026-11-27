@@ -1,0 +1,147 @@
+<section class="page-section">
+  <header class="page-heading">
+    <div><span class="section-kicker">Planificación y seguimiento</span><h1 class="section-title">Faenas de pesca</h1><p class="text-muted">Planifica salidas, controla estados y consulta el historial de tus operaciones.</p></div>
+    <div class="average-duration" *ngIf="authService.hasAuthority('PESCADOR')"><mat-icon>schedule</mat-icon><div><small>Duración promedio finalizada</small><strong>{{ tiempoPromedioMin | number:'1.0-0' }} min</strong></div></div>
+  </header>
+
+
+  <mat-card class="rafishdar-card" *ngIf="authService.hasAuthority('PESCADOR') || editandoId">
+    <div class="section-heading-row"><h2 class="section-title">{{ editandoId ? 'Editar faena #' + editandoId : 'Planificar una faena' }}</h2><span class="status-badge status-Planificada">{{ editandoId ? 'Edición' : 'Nueva planificación' }}</span></div>
+    <form [formGroup]="faenaForm" (ngSubmit)="guardarFaena()" class="faena-plan-grid">
+
+      <!-- Embarcación con estilo unificado -->
+      <div class="uniform-field-box">
+        <label class="uniform-field-label" for="embSelect">Embarcación *</label>
+        <div class="uniform-field-inner">
+          <select id="embSelect" class="uniform-select full-select" formControlName="embarcacionId">
+            <option [ngValue]="null" disabled>Selecciona una embarcación</option>
+            <option *ngFor="let e of embarcaciones" [ngValue]="e.id">{{ e.nombre }} ({{ e.matricula }})</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Fecha y hora de salida -->
+      <div class="uniform-field-box">
+        <label class="uniform-field-label">Fecha y hora de salida *</label>
+        <div class="uniform-field-inner">
+          <div class="date-input-group">
+            <input type="text" class="clean-date-input" [value]="formatearFechaVisual(salidaFecha)" placeholder="dd/mm/aaaa" readonly (click)="toggleCalendario('salida')">
+            <button type="button" class="calendar-icon-btn" (click)="toggleCalendario('salida')" matTooltip="Seleccionar fecha" aria-label="Seleccionar fecha de salida">
+              <mat-icon>calendar_month</mat-icon>
+            </button>
+          </div>
+          <select class="time-select" [(ngModel)]="salidaHora12" [ngModelOptions]="{standalone: true}" (ngModelChange)="sincronizarSalida()" aria-label="Hora (0 a 12)">
+            <option *ngFor="let h of horasDoce" [ngValue]="h">{{ h }}</option>
+          </select>
+          <select class="time-select" [(ngModel)]="salidaMinuto" [ngModelOptions]="{standalone: true}" (ngModelChange)="sincronizarSalida()" aria-label="Minutos">
+            <option *ngFor="let m of minutosOpciones" [ngValue]="m">{{ m < 10 ? ('0' + m) : m }}</option>
+          </select>
+          <select class="ampm-select" [(ngModel)]="salidaPeriodo" [ngModelOptions]="{standalone: true}" (ngModelChange)="sincronizarSalida()" aria-label="AM o PM">
+            <option value="AM">AM</option>
+            <option value="PM">PM</option>
+          </select>
+        </div>
+
+        <!-- Mini ventana de calendario emergente -->
+        <div class="mini-calendar-popover" *ngIf="calendarioActivo === 'salida'">
+          <div class="cal-header">
+            <button type="button" class="cal-nav-btn" (click)="cambiarMesCalendario(-1)" aria-label="Mes anterior"><mat-icon>chevron_left</mat-icon></button>
+            <strong>{{ tituloMesCalendario }}</strong>
+            <button type="button" class="cal-nav-btn" (click)="cambiarMesCalendario(1)" aria-label="Mes siguiente"><mat-icon>chevron_right</mat-icon></button>
+          </div>
+          <div class="cal-weekdays">
+            <span>Lu</span><span>Ma</span><span>Mi</span><span>Ju</span><span>Vi</span><span>Sa</span><span>Do</span>
+          </div>
+          <div class="cal-days-grid">
+            <button type="button" *ngFor="let cell of diasCalendario"
+              class="cal-day-btn"
+              [class.cal-other-month]="!cell.inMonth"
+              [class.cal-selected]="cell.iso === salidaFecha"
+              [class.cal-today]="cell.isToday"
+              (click)="seleccionarFechaCalendario(cell.iso)">
+              {{ cell.day }}
+            </button>
+          </div>
+          <div class="cal-footer">
+            <button type="button" class="btn-rafishdar btn-secondary btn-sm" (click)="seleccionarHoyCalendario()">Hoy</button>
+            <button type="button" class="btn-rafishdar btn-sm" (click)="calendarioActivo = null">Listo</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Llegada estimada (opcional) -->
+      <div class="uniform-field-box">
+        <div class="label-with-action">
+          <label class="uniform-field-label">Llegada estimada (opcional)</label>
+          <button type="button" class="clear-link-btn" *ngIf="llegadaFecha" (click)="limpiarLlegada()">Limpiar</button>
+        </div>
+        <div class="uniform-field-inner">
+          <div class="date-input-group">
+            <input type="text" class="clean-date-input" [value]="formatearFechaVisual(llegadaFecha)" placeholder="dd/mm/aaaa" readonly (click)="toggleCalendario('llegada')">
+            <button type="button" class="calendar-icon-btn" (click)="toggleCalendario('llegada')" matTooltip="Seleccionar fecha estimada" aria-label="Seleccionar fecha de llegada">
+              <mat-icon>calendar_month</mat-icon>
+            </button>
+          </div>
+          <select class="time-select" [(ngModel)]="llegadaHora12" [ngModelOptions]="{standalone: true}" (ngModelChange)="sincronizarLlegada()" aria-label="Hora llegada (0 a 12)">
+            <option *ngFor="let h of horasDoce" [ngValue]="h">{{ h }}</option>
+          </select>
+          <select class="time-select" [(ngModel)]="llegadaMinuto" [ngModelOptions]="{standalone: true}" (ngModelChange)="sincronizarLlegada()" aria-label="Minutos llegada">
+            <option *ngFor="let m of minutosOpciones" [ngValue]="m">{{ m < 10 ? ('0' + m) : m }}</option>
+          </select>
+          <select class="ampm-select" [(ngModel)]="llegadaPeriodo" [ngModelOptions]="{standalone: true}" (ngModelChange)="sincronizarLlegada()" aria-label="AM o PM llegada">
+            <option value="AM">AM</option>
+            <option value="PM">PM</option>
+          </select>
+        </div>
+
+        <div class="mini-calendar-popover" *ngIf="calendarioActivo === 'llegada'">
+          <div class="cal-header">
+            <button type="button" class="cal-nav-btn" (click)="cambiarMesCalendario(-1)" aria-label="Mes anterior"><mat-icon>chevron_left</mat-icon></button>
+            <strong>{{ tituloMesCalendario }}</strong>
+            <button type="button" class="cal-nav-btn" (click)="cambiarMesCalendario(1)" aria-label="Mes siguiente"><mat-icon>chevron_right</mat-icon></button>
+          </div>
+          <div class="cal-weekdays">
+            <span>Lu</span><span>Ma</span><span>Mi</span><span>Ju</span><span>Vi</span><span>Sa</span><span>Do</span>
+          </div>
+          <div class="cal-days-grid">
+            <button type="button" *ngFor="let cell of diasCalendario"
+              class="cal-day-btn"
+              [class.cal-other-month]="!cell.inMonth"
+              [class.cal-selected]="cell.iso === llegadaFecha"
+              [class.cal-today]="cell.isToday"
+              (click)="seleccionarFechaCalendario(cell.iso)">
+              {{ cell.day }}
+            </button>
+          </div>
+          <div class="cal-footer">
+            <button type="button" class="btn-rafishdar btn-secondary btn-sm" (click)="seleccionarHoyCalendario()">Hoy</button>
+            <button type="button" class="btn-rafishdar btn-sm" (click)="calendarioActivo = null">Listo</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="faena-submit-col">
+        <button type="submit" class="btn-rafishdar" [disabled]="faenaForm.invalid || guardando"><mat-icon>{{ editandoId ? 'save' : 'add_task' }}</mat-icon>{{ guardando ? 'Guardando...' : (editandoId ? 'Guardar cambios' : 'Planificar faena') }}</button>
+        <button *ngIf="editandoId" type="button" class="btn-rafishdar btn-secondary" (click)="cancelarEdicion()">Cancelar</button>
+      </div>
+    </form>
+  </mat-card>
+
+
+  <mat-card class="rafishdar-card">
+    <div class="section-heading-row table-heading"><div><h2 class="section-title">Registro de faenas</h2><p class="text-muted">{{ dataSource.data.length }} registros encontrados</p></div><mat-form-field appearance="outline" class="filter-field"><mat-label>Estado</mat-label><mat-select [(ngModel)]="filtroEstado" (selectionChange)="cargarFaenas()"><mat-option value="TODAS">Todos los estados</mat-option><mat-option value="Planificada">Planificada</mat-option><mat-option value="En curso">En curso</mat-option><mat-option value="Finalizada">Finalizada</mat-option><mat-option value="Cancelada">Cancelada</mat-option></mat-select></mat-form-field></div>
+    <div class="table-container">
+      <table mat-table [dataSource]="dataSource">
+        <ng-container matColumnDef="id"><th mat-header-cell *matHeaderCellDef>Faena</th><td mat-cell *matCellDef="let row"><strong>#{{ row.id }}</strong></td></ng-container>
+        <ng-container matColumnDef="embarcacionId"><th mat-header-cell *matHeaderCellDef>Embarcación</th><td mat-cell *matCellDef="let row">{{ obtenerNombreEmbarcacion(row.embarcacionId) }}</td></ng-container>
+        <ng-container matColumnDef="fechaHoraSalida"><th mat-header-cell *matHeaderCellDef>Salida</th><td mat-cell *matCellDef="let row">{{ (row.fechaHoraSalida || row.fechaHoraSalidaProgramada) | date:'medium' }}</td></ng-container>
+        <ng-container matColumnDef="fechaHoraLlegada"><th mat-header-cell *matHeaderCellDef>Llegada</th><td mat-cell *matCellDef="let row">{{ (row.fechaHoraLlegada || row.fechaHoraLlegadaEstimada) ? ((row.fechaHoraLlegada || row.fechaHoraLlegadaEstimada) | date:'medium') : 'Pendiente' }}</td></ng-container>
+        <ng-container matColumnDef="estado"><th mat-header-cell *matHeaderCellDef>Estado</th><td mat-cell *matCellDef="let row"><span class="status-badge" [ngClass]="claseEstado(row.estado)">{{ row.estado }}</span></td></ng-container>
+        <ng-container matColumnDef="acciones"><th mat-header-cell *matHeaderCellDef>Acciones</th><td mat-cell *matCellDef="let row"><div class="table-actions"><a [routerLink]="['/faenas', row.id]" class="btn-rafishdar btn-sm" matTooltip="Bitácoras, capturas, gastos e IA"><mat-icon>open_in_new</mat-icon>Detalle</a><button *ngIf="row.estado === 'Planificada'" type="button" mat-icon-button color="primary" (click)="editarPlanificada(row)" matTooltip="Editar planificación"><mat-icon>edit</mat-icon></button><button *ngIf="row.estado === 'Planificada'" type="button" mat-icon-button color="primary" (click)="iniciarFaena(row.id!)" matTooltip="Iniciar faena"><mat-icon>play_arrow</mat-icon></button><button *ngIf="row.estado === 'En curso'" type="button" mat-icon-button color="accent" (click)="editarLlegada(row)" matTooltip="Actualizar llegada estimada"><mat-icon>schedule</mat-icon></button><button *ngIf="row.estado === 'En curso'" type="button" mat-icon-button color="warn" (click)="revertirPlanificada(row.id!)" matTooltip="Revertir a planificada"><mat-icon>undo</mat-icon></button><button *ngIf="row.estado === 'Planificada'" type="button" mat-icon-button color="warn" (click)="eliminarFaena(row.id!)" matTooltip="Eliminar faena"><mat-icon>delete_outline</mat-icon></button></div><div class="arrival-inline" *ngIf="arrivalEditingId === row.id"><input type="datetime-local" [(ngModel)]="arrivalEdit" [ngModelOptions]="{standalone: true}"><button type="button" class="btn-rafishdar btn-sm" (click)="guardarLlegada(row)">Guardar</button><button type="button" mat-icon-button (click)="cancelarLlegada()"><mat-icon>close</mat-icon></button></div></td></ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr><tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        <tr class="mat-row" *matNoDataRow><td class="mat-cell empty-cell" colspan="6">No hay faenas para el estado seleccionado.</td></tr>
+      </table>
+    </div>
+    <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+  </mat-card>
+</section>

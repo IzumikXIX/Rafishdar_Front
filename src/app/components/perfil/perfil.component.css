@@ -1,0 +1,10 @@
+.perfil-center { display: flex; justify-content: center; }
+.perfil-card { width: 100%; max-width: 580px; }
+.perfil-card h2 { font-size: 1.3rem; }
+.profile-data { display: flex; flex-direction: column; gap: .65rem; margin: 1rem 0; }
+.profile-row { display: flex; align-items: flex-start; gap: .7rem; padding: .65rem .8rem; background: #f7fafb; border-radius: 9px; }
+.profile-row mat-icon { color: #428193; }
+.profile-row small, .profile-row strong { display: block; }
+.profile-row small { color: #7c8c94; font-size: .7rem; }
+.profile-row strong { color: #324e5b; font-size: .83rem; overflow-wrap: anywhere; }
+.pass-form { display: flex; flex-direction: column; gap: .75rem; margin-top: .85rem; }

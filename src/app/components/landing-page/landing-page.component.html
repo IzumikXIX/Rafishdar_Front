@@ -1,0 +1,47 @@
+<div class="landing-wrapper">
+  <div class="rafishdar-card hero-card">
+    <div class="hero-content">
+      <span class="section-kicker">Gestión y trazabilidad pesquera</span>
+      <h1 class="hero-heading">Información clara para cada jornada en el mar.</h1>
+      <p class="hero-desc">Rafishdar reúne planificación de faenas, bitácoras, monitoreo climático, control de cuotas y análisis operativo en una plataforma para apoyar una pesca responsable.</p>
+      <div class="hero-actions">
+        <ng-container *ngIf="!authService.isLoggedIn(); else loggedActions">
+          <a routerLink="/register" class="btn-rafishdar"><mat-icon>person_add</mat-icon><span>Crear cuenta</span></a>
+          <a routerLink="/login" class="btn-rafishdar btn-alt"><mat-icon>login</mat-icon><span>Iniciar sesión</span></a>
+        </ng-container>
+        <ng-template #loggedActions>
+          <a routerLink="/dashboard" class="btn-rafishdar"><mat-icon>space_dashboard</mat-icon><span>Abrir panel de control</span></a>
+          <a *ngIf="authService.hasAuthority('PESCADOR') || authService.hasAuthority('ADMIN')" routerLink="/faenas" class="btn-rafishdar btn-alt"><mat-icon>sailing</mat-icon><span>Gestionar faenas</span></a>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+  <section class="landing-intro">
+    <div><h2>Una visión integrada de tus operaciones</h2><p>Datos de campo y herramientas de consulta en un solo lugar.</p></div>
+  </section>
+  <section class="cards-grid">
+    <article class="rafishdar-card feature-card">
+      <mat-icon class="feature-icon">explore</mat-icon><h3>Planificación y bitácoras</h3>
+      <p>Organiza tus faenas, registra capturas y conserva el seguimiento de cada recorrido.</p>
+      <a [routerLink]="authService.isLoggedIn() ? '/faenas' : '/login'" class="text-link">Acceder a faenas <mat-icon>arrow_forward</mat-icon></a>
+    </article>
+    <article class="rafishdar-card feature-card">
+      <mat-icon class="feature-icon">cloud</mat-icon><h3>Clima y condiciones</h3>
+      <p>Consulta el viento y las condiciones del litoral para complementar tu planificación.</p>
+      <a href="https://www.windy.com/es/-Men%C3%BA/menu?waves,-12.068,-77.168,15" target="_blank" rel="noopener noreferrer" class="text-link">Abrir Windy <mat-icon>open_in_new</mat-icon></a>
+    </article>
+    <article class="rafishdar-card feature-card">
+      <mat-icon class="feature-icon">map</mat-icon><h3>Mapa y zonas de pesca</h3>
+      <p>Explora zonas, ubicaciones y referencias geográficas para tus operaciones.</p>
+      <a [routerLink]="authService.isLoggedIn() ? '/zonas-pesca' : '/login'" class="text-link">Ver zonas de pesca <mat-icon>arrow_forward</mat-icon></a>
+    </article>
+  </section>
+  <section class="rafishdar-card about-card">
+    <div class="about-header"><span class="section-kicker">Sobre Rafishdar</span><h2>Con tecnología, hacia una pesca responsable.</h2></div>
+    <p>Rafishdar es una iniciativa tecnológica desarrollada por estudiantes de la Universidad Peruana de Ciencias Aplicadas. Busca aportar a la pesca peruana mediante herramientas de trazabilidad, análisis climático y gestión eficiente de flotas.</p>
+    <div class="segments-grid">
+      <div class="segment-box"><h4>Pesca artesanal</h4><p>Apoyo para organizar salidas, registrar información y evaluar condiciones durante las faenas.</p></div>
+      <div class="segment-box"><h4>Pesca industrial</h4><p>Herramientas para el seguimiento de cuotas, especies, temporadas y registros operativos.</p></div>
+    </div>
+  </section>
+</div>

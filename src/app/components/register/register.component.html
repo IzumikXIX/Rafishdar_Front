@@ -1,0 +1,43 @@
+<div class="auth-center">
+  <mat-card class="rafishdar-card auth-card">
+    <h2 class="section-title text-center">Crear Cuenta de Pescador</h2>
+    <p class="text-center subtitle">Regístrate para gestionar tus embarcaciones y faenas</p>
+
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="auth-form">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Nombres</mat-label>
+        <input matInput formControlName="nombres" placeholder="Ej. Diego Fabián" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Apellidos</mat-label>
+        <input matInput formControlName="apellidos" placeholder="Ej. Vargas Aznarán" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Correo electrónico</mat-label>
+        <input matInput type="email" formControlName="correo" placeholder="tu@correo.com" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Contraseña (mínimo 6 caracteres)</mat-label>
+        <input matInput type="password" formControlName="password" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Confirmar contraseña</mat-label>
+        <input matInput type="password" formControlName="confirmPassword" />
+      </mat-form-field>
+
+      <button type="submit" class="btn-rafishdar full-width" [disabled]="registerForm.invalid || cargando">
+        <mat-icon>person_add</mat-icon>
+        <span>{{ cargando ? 'Creando cuenta...' : 'Crear Cuenta' }}</span>
+      </button>
+    </form>
+
+    <div class="auth-links">
+      <a routerLink="/login">¿Ya tienes cuenta? Inicia sesión</a>
+      <a routerLink="/">← Volver al inicio</a>
+    </div>
+  </mat-card>
+</div>

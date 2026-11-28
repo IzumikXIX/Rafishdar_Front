@@ -1,0 +1,12 @@
+.page-section { display: flex; flex-direction: column; gap: 1rem; }
+.page-heading h1 { font-size: 1.55rem; margin-top: .15rem; }
+.section-heading-row { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: .8rem; }
+.section-heading-row h2 { font-size: 1.1rem; margin: 0; }
+.section-heading-row p { font-size: .78rem; margin-top: .15rem; }
+.user-list-heading { margin-bottom: .3rem; }
+.search-row { display: flex; align-items: center; flex-wrap: wrap; gap: .6rem; }
+.search-row mat-form-field { width: min(100%, 320px); }
+.roles-list { display: flex; gap: .35rem; flex-wrap: wrap; }
+.role-chip { display: inline-flex; border-radius: 999px; background: #eaf3f5; color: #285c6d; padding: .22rem .6rem; font-size: .68rem; font-weight: 700; }
+.empty-cell { text-align: center; padding: 1.5rem !important; color: #74858d; }
+@media (max-width: 680px) { .search-row { width: 100%; } .search-row mat-form-field, .search-row button { width: 100%; } }

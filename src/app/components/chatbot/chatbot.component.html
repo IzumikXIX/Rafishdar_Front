@@ -1,0 +1,54 @@
+<main class="chat-page">
+  <section class="chat-shell" aria-label="Asistente RafiBot">
+    <header class="chat-header">
+      <div class="bot-avatar"><mat-icon>support_agent</mat-icon></div>
+      <div class="chat-heading">
+        <h1>RafiBot</h1>
+        <p><span class="status-dot"></span> Asistente de Rafishdar · IA</p>
+      </div>
+      <button mat-icon-button type="button" class="reset-button" (click)="limpiarConversacion()" [disabled]="enviando" aria-label="Reiniciar conversación" matTooltip="Nueva conversación">
+        <mat-icon>refresh</mat-icon>
+      </button>
+    </header>
+
+    <div #messageList class="message-list" aria-live="polite" aria-relevant="additions text">
+      <div class="context-note">
+        <mat-icon>info_outline</mat-icon>
+        <span>El asistente usa tus datos históricos de faenas cuando están disponibles. No sustituye avisos meteorológicos ni instrucciones de las autoridades marítimas.</span>
+      </div>
+      <article class="message-row" *ngFor="let message of mensajes" [class.user-row]="message.role === 'user'" [class.bot-row]="message.role === 'model'">
+        <div class="message-avatar" *ngIf="message.role === 'model'"><mat-icon>smart_toy</mat-icon></div>
+        <div class="message-content">
+          <div class="message-bubble" [class.user-bubble]="message.role === 'user'" [class.bot-bubble]="message.role === 'model'">
+            {{ message.text }}
+          </div>
+          <time>{{ message.time | date:'HH:mm' }}</time>
+        </div>
+        <div class="message-avatar user-avatar" *ngIf="message.role === 'user'"><mat-icon>person</mat-icon></div>
+      </article>
+      <div class="message-row bot-row" *ngIf="enviando">
+        <div class="message-avatar"><mat-icon>smart_toy</mat-icon></div>
+        <div class="message-content">
+          <div class="message-bubble bot-bubble typing"><span></span><span></span><span></span></div>
+          <time>RafiBot está escribiendo</time>
+        </div>
+      </div>
+    </div>
+
+    <div class="composer-area">
+      <label class="context-selector" *ngIf="puedeSeleccionarUsuarioContexto">
+        <span>Contexto de pescador (opcional):</span>
+        <input type="number" min="1" step="1" [(ngModel)]="usuarioContextoId" placeholder="ID de usuario" aria-label="ID del pescador para consultar su historial">
+        <small>Deja vacío para conversar sin datos históricos.</small>
+      </label>
+      <p class="error-note" *ngIf="error"><mat-icon>warning_amber</mat-icon>{{ error }}</p>
+      <div class="composer">
+        <textarea #messageInput [(ngModel)]="texto" (input)="ajustarAlturaInput()" (keydown.enter)="onEnter($event)" [disabled]="enviando" maxlength="2000" rows="1" placeholder="Escribe tu consulta sobre pesca o tus faenas..." aria-label="Escribe un mensaje"></textarea>
+        <button mat-fab color="primary" type="button" (click)="enviar()" [disabled]="enviando || !texto.trim() || texto.length > 2000" aria-label="Enviar mensaje">
+          <mat-icon>send</mat-icon>
+        </button>
+      </div>
+      <small>Enter para enviar · Shift + Enter para una nueva línea · Máximo 2000 caracteres</small>
+    </div>
+  </section>
+</main>

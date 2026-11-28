@@ -1,0 +1,54 @@
+<section class="dashboard-page">
+  <mat-card class="rafishdar-card dashboard-welcome">
+    <div class="welcome-content"><span class="section-kicker">Resumen de operaciones</span><h1 class="section-title">Panel de control</h1><p>Bienvenido a Rafishdar. Revisa tus indicadores, operaciones activas y alertas en un solo lugar.</p><small>Sesión: <strong>{{ authService.getUserEmail() }}</strong> · Perfil: <strong>{{ authService.getAuthorities() }}</strong></small></div>
+    <div class="welcome-actions" *ngIf="authService.hasAuthority('PESCADOR') || authService.hasAuthority('ADMIN')"><a routerLink="/faenas" class="btn-rafishdar"><mat-icon>sailing</mat-icon>Gestionar faenas</a><a routerLink="/zonas-pesca" class="btn-rafishdar btn-secondary"><mat-icon>map</mat-icon>Explorar zonas</a></div>
+  </mat-card>
+
+
+  <section class="kpi-grid" *ngIf="authService.hasAuthority('PESCADOR')">
+    <mat-card class="rafishdar-card kpi-box"><div class="kpi-icon sea"><mat-icon>scale</mat-icon></div><h2>{{ volumenTotalMes | number:'1.0-2' }} kg</h2><p>Captura · últimos 30 días</p></mat-card>
+    <mat-card class="rafishdar-card kpi-box"><div class="kpi-icon gold"><mat-icon>payments</mat-icon></div><h2>S/ {{ gastosTotalMes | number:'1.2-2' }}</h2><p>Gastos · últimos 30 días</p></mat-card>
+    <mat-card class="rafishdar-card kpi-box"><div class="kpi-icon purple"><mat-icon>receipt_long</mat-icon></div><h2>S/ {{ promedioGastoFaena | number:'1.2-2' }}</h2><p>Gasto promedio por faena</p></mat-card>
+    <mat-card class="rafishdar-card kpi-box"><div class="kpi-icon slate"><mat-icon>schedule</mat-icon></div><h2>{{ tiempoPromedioMin | number:'1.0-0' }} min</h2><p>Duración promedio finalizada</p></mat-card>
+  </section>
+
+
+  <div class="dashboard-grid" *ngIf="authService.hasAuthority('PESCADOR')">
+    <mat-card class="rafishdar-card dashboard-panel">
+      <div class="section-heading-row"><div><h2 class="section-title">Análisis de captura por especie</h2><p class="text-muted">Consulta el volumen registrado por especie en tu cuenta durante un periodo.</p></div></div>
+      <div class="analytics-filter">
+        <mat-form-field appearance="outline"><mat-label>Especie</mat-label><mat-select [(ngModel)]="especieConsultaId"><mat-option *ngFor="let e of especies" [value]="e.id">{{ e.nombreComun }}</mat-option></mat-select></mat-form-field>
+        <mat-form-field appearance="outline"><mat-label>Desde</mat-label><input matInput type="date" [(ngModel)]="fechaInicio"></mat-form-field>
+        <mat-form-field appearance="outline"><mat-label>Hasta</mat-label><input matInput type="date" [(ngModel)]="fechaFin"></mat-form-field>
+        <button type="button" class="btn-rafishdar" (click)="consultarVolumenEspecie()" [disabled]="consultandoVolumenEspecie"><mat-icon>search</mat-icon>{{ consultandoVolumenEspecie ? 'Consultando...' : 'Consultar' }}</button>
+      </div>
+      <div class="volume-result"><div><small>Volumen en el periodo</small><strong>{{ volumenEspecie | number:'1.1-2' }} kg</strong></div><mat-icon>set_meal</mat-icon></div>
+    </mat-card>
+
+    <mat-card class="rafishdar-card dashboard-panel">
+      <h2 class="section-title">Zonas con mayor captura</h2><p class="text-muted">Ranking histórico del mes actual para la especie consultada.</p>
+      <ol class="top-zone-list" *ngIf="zonasTopNombres.length; else noTopZones"><li *ngFor="let zona of zonasTopNombres"><span>{{ zona.nombreZona }}</span><small>{{ zona.distanciaCostaKm }} km de costa</small></li></ol>
+      <ng-template #noTopZones><div class="empty-state">Consulta una especie para ver las zonas con mayor registro de captura.</div></ng-template>
+    </mat-card>
+  </div>
+
+
+  <mat-card class="rafishdar-card dashboard-panel" *ngIf="faenasEnCurso.length > 0 && (authService.hasAuthority('PESCADOR') || authService.hasAuthority('ADMIN'))">
+    <div class="section-heading-row"><div><h2 class="section-title">Faenas en curso</h2><p class="text-muted">Operaciones que requieren seguimiento.</p></div><span class="status-badge status-En-curso">{{ faenasEnCurso.length }} activas</span></div>
+    <div class="active-trip-list"><div class="active-trip" *ngFor="let f of faenasEnCurso"><div class="trip-number"><mat-icon>sailing</mat-icon><strong>#{{ f.id }}</strong></div><div class="trip-info"><strong>Embarcación #{{ f.embarcacionId }}</strong><small>Salida: {{ f.fechaHoraSalida | date:'medium' }}</small></div><a [routerLink]="['/faenas', f.id]" class="btn-rafishdar btn-sm">Abrir detalle<mat-icon>arrow_forward</mat-icon></a></div></div>
+  </mat-card>
+
+
+  <mat-card class="rafishdar-card dashboard-panel" *ngIf="authService.hasAuthority('TECNICO') || authService.hasAuthority('ADMIN')">
+    <div class="section-heading-row"><div><h2 class="section-title">Alertas preventivas · IA</h2><p class="text-muted">Recomendaciones de nivel alto generadas durante las últimas 48 horas.</p></div><span class="status-badge status-Cancelada">{{ alertasAltoRiesgo.length }} alertas</span></div>
+    <div *ngIf="!alertasAltoRiesgo.length" class="empty-state">No se registran recomendaciones de alto riesgo en el periodo consultado.</div>
+    <div class="risk-alert-list" *ngIf="alertasAltoRiesgo.length"><div class="risk-alert" *ngFor="let rec of alertasAltoRiesgo"><span class="risk-badge risk-ALTO">ALTO</span><div class="alert-text"><p>{{ rec.analisisTexto }}</p><small>{{ rec.fechaGeneracion | date:'medium' }}</small></div><a *ngIf="rec.faena?.id" [routerLink]="['/faenas', rec.faena?.id]" class="alert-link">Ver faena</a></div></div>
+  </mat-card>
+
+
+  <mat-card class="rafishdar-card dashboard-panel" *ngIf="authService.hasAuthority('PESCADOR') || authService.hasAuthority('ADMIN')">
+    <div class="section-heading-row"><div><h2 class="section-title">Alertas meteorológicas</h2><p class="text-muted">Registros con viento igual o superior a 30 nudos.</p></div><span class="status-badge status-En-curso">{{ climasPeligrosos.length }} registros</span></div>
+    <div *ngIf="!climasPeligrosos.length" class="empty-state">No hay condiciones de viento peligroso registradas.</div>
+    <div class="weather-alert-list" *ngIf="climasPeligrosos.length"><div class="weather-alert" *ngFor="let c of climasPeligrosos"><mat-icon>air</mat-icon><div><strong>{{ c.velocidadVientoNudos }} nudos</strong><span>{{ c.estadoOleaje }} · {{ c.temperaturaCelsius }} °C</span></div></div></div>
+  </mat-card>
+</section>

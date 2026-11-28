@@ -1,0 +1,12 @@
+.page-section { display: flex; flex-direction: column; gap: 1rem; }
+.page-heading h1 { font-size: 1.55rem; margin-top: .15rem; }
+.tab-space { padding: 1.15rem .15rem; }
+.sub-panel { background: #f7fafb; border: 1px solid #e2eaed; border-radius: 13px; padding: 1rem; margin-bottom: 1rem; }
+.sub-panel h2 { font-size: 1.05rem; color: #254957; margin: 0; }
+.section-heading-row { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: .8rem; }
+.filter-row { display: flex; align-items: center; gap: .65rem; flex-wrap: wrap; margin: .75rem 0; }
+.species-filters mat-form-field { width: min(100%, 300px); }
+.quota-filters mat-form-field { width: min(100%, 260px); }
+.empty-cell { text-align: center; padding: 1.4rem !important; color: #74858d; }
+.simple-table td small { color: #85949b; font-size: .7rem; }
+@media (max-width: 680px) { .filter-row button { flex: 1; } .species-filters mat-form-field, .quota-filters mat-form-field { width: 100%; } }

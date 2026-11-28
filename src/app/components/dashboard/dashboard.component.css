@@ -1,0 +1,36 @@
+.dashboard-page { display: flex; flex-direction: column; gap: 1.2rem; }
+.dashboard-welcome { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; background: linear-gradient(115deg, #fff 55%, #f1f8fa 100%) !important; }
+.welcome-content h1 { font-size: 1.6rem; margin-top: .15rem; }
+.welcome-content p { color: #5b707b; margin: .35rem 0 .6rem; }
+.welcome-content small { color: #8a9aa2; font-size: .74rem; }
+.welcome-content small strong { color: #415d69; }
+.welcome-actions { display: flex; gap: .6rem; flex-wrap: wrap; }
+.kpi-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-auto-rows: 1fr; align-items: stretch; gap: 1rem; }
+.kpi-box { display: flex; flex-direction: column; align-items: flex-start; justify-content: space-between; height: 100%; margin: 0 !important; min-height: 155px; }
+.kpi-box h2 { color: #203a46; font-size: 1.4rem; font-weight: 800; margin: .65rem 0 .2rem; }
+.kpi-box p { color: #74848c; font-size: .75rem; }
+.kpi-icon { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 12px; }
+.kpi-icon mat-icon { font-size: 22px; width: 22px; height: 22px; }
+.kpi-icon.sea { background: #e5f4f6; color: #287486; } .kpi-icon.gold { background: #fff4da; color: #946f28; }
+.kpi-icon.purple { background: #f0eafb; color: #7356a8; } .kpi-icon.slate { background: #eaf0f4; color: #526a7a; }
+.dashboard-grid { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, .8fr); align-items: stretch; gap: 1rem; }
+.dashboard-panel { margin: 0 !important; height: 100%; display: flex; flex-direction: column; }
+.dashboard-panel h2 { font-size: 1.08rem; }
+.dashboard-panel > p { font-size: .78rem; margin: .1rem 0 .7rem; }
+.analytics-filter { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .6rem; align-items: center; }
+.analytics-filter button { grid-column: 1 / -1; justify-self: start; }
+.volume-result { margin-top: .5rem; background: #eff7f8; border-radius: 12px; padding: 1rem; display: flex; justify-content: space-between; align-items: center; color: #256c7d; }
+.volume-result small, .volume-result strong { display: block; } .volume-result small { color: #6c828b; font-size: .72rem; } .volume-result strong { font-size: 1.45rem; font-weight: 800; }
+.volume-result mat-icon { font-size: 30px; width: 30px; height: 30px; }
+.top-zone-list { list-style: none; display: flex; flex-direction: column; gap: .45rem; padding: 0; margin-top: .8rem; }
+.top-zone-list li { display: flex; align-items: center; justify-content: space-between; gap: .8rem; padding: .7rem .8rem; background: #f7fafb; border-radius: 10px; }
+.top-zone-list li span { font-weight: 700; color: #2a4d5b; } .top-zone-list li small { color: #7d8c94; font-size: .72rem; }
+.active-trip-list, .risk-alert-list, .weather-alert-list { display: flex; flex-direction: column; gap: .6rem; margin-top: .8rem; }
+.active-trip, .risk-alert, .weather-alert { display: flex; align-items: center; gap: .8rem; padding: .8rem; border-radius: 12px; background: #f7fafb; border: 1px solid #e8eef0; }
+.trip-number { display: flex; align-items: center; gap: .4rem; color: #286b7b; background: #e5f2f4; padding: .45rem .65rem; border-radius: 9px; }
+.trip-info { flex: 1; display: flex; flex-direction: column; gap: .1rem; } .trip-info small { color: #81919a; font-size: .72rem; }
+.risk-alert { align-items: flex-start; background: #fff7f5; border-color: #f1ded9; } .alert-text { flex: 1; color: #604c48; } .alert-text p { font-size: .84rem; } .alert-text small { color: #8d7b77; font-size: .7rem; }
+.alert-link { color: #245e6e; font-weight: 700; text-decoration: none; white-space: nowrap; font-size: .78rem; }
+.weather-alert { background: #fff9ed; border-color: #f2e5cb; color: #8a6a2c; } .weather-alert mat-icon { font-size: 23px; width: 23px; height: 23px; } .weather-alert div { display: flex; flex-direction: column; } .weather-alert span { font-size: .74rem; color: #8b8170; }
+@media (max-width: 1100px) { .kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .dashboard-grid { grid-template-columns: 1fr; } }
+@media (max-width: 650px) { .kpi-grid { grid-template-columns: 1fr 1fr; } .analytics-filter { grid-template-columns: 1fr; } .analytics-filter button { grid-column: auto; } .active-trip, .risk-alert { flex-wrap: wrap; } .welcome-actions { width: 100%; } .welcome-actions a { flex: 1; } }

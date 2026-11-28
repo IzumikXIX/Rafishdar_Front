@@ -32,4 +32,8 @@ export class FaenaService {
     if (inicio && fin) params = params.set('inicio', inicio).set('fin', fin);
     return this.http.get<number>(`${this.url}/usuario/${idUsuario}/tiempo-promedio`, { params });
   }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> c0eac0f90093127ac4f1b4de318a3665d4e1d9ad

@@ -1,0 +1,2 @@
+Coloca aqui tu archivo de logo con el nombre exacto: Logo.png
+Ruta referenciada en la app: /Imagenes/Logo.png

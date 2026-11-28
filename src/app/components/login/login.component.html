@@ -1,0 +1,46 @@
+<div class="auth-center">
+  <mat-card class="rafishdar-card auth-card">
+    <h2 class="section-title text-center">Iniciar Sesión</h2>
+    <p class="text-center subtitle">Accede con tus credenciales de Rafishdar</p>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="auth-form">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Correo electrónico</mat-label>
+        <input matInput type="email" formControlName="email" placeholder="carlos@pesca.com" />
+        <mat-error *ngIf="loginForm.get('email')?.hasError('required')">El correo es obligatorio</mat-error>
+        <mat-error *ngIf="loginForm.get('email')?.hasError('email')">Formato de correo inválido</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Contraseña</mat-label>
+        <input matInput type="password" formControlName="password" />
+        <mat-error *ngIf="loginForm.get('password')?.hasError('required')">La contraseña es obligatoria</mat-error>
+      </mat-form-field>
+
+      <button type="submit" class="btn-rafishdar full-width" [disabled]="loginForm.invalid || cargando">
+        <mat-icon>login</mat-icon>
+        <span>{{ cargando ? 'Ingresando...' : 'Iniciar Sesión' }}</span>
+      </button>
+    </form>
+
+    <div class="demo-box">
+      <small><strong>Accesos rápidos de prueba (Backend):</strong></small>
+      <div class="demo-buttons">
+        <button type="button" mat-stroked-button (click)="autocompletarDemo('carlos@pesca.com', 'Pesca123')">
+          Pescador (Carlos)
+        </button>
+        <button type="button" mat-stroked-button (click)="autocompletarDemo('admin@rafishdar.com', 'Admin123')">
+          Admin (Ana)
+        </button>
+        <button type="button" mat-stroked-button (click)="autocompletarDemo('tecnico@rafishdar.com', 'Tecnico123')">
+          Técnico (Luis)
+        </button>
+      </div>
+    </div>
+
+    <div class="auth-links">
+      <a routerLink="/register">¿No tienes cuenta? Regístrate aquí</a>
+      <a routerLink="/">← Volver al inicio</a>
+    </div>
+  </mat-card>
+</div>

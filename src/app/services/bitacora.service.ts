@@ -21,4 +21,8 @@ export class BitacoraService {
     const params = new HttpParams().set('keyword', keyword);
     return this.http.get<boolean>(`${this.url}/zona/${idZona}/alerta-incidencias`, { params });
   }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> c0eac0f90093127ac4f1b4de318a3665d4e1d9ad

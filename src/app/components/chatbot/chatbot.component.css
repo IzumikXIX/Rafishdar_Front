@@ -5,7 +5,11 @@
 .bot-avatar { width: 48px; height: 48px; }
 .bot-avatar mat-icon { font-size: 27px; width: 27px; height: 27px; }
 .chat-heading { flex: 1; }
+<<<<<<< HEAD
+.chat-heading h1 { margin: 0 0 4px; color: #17364a; font-size: 20px; font-weight: 750; }
+=======
 .chat-heading h1 { margin: 0 0 4px; color: #011522; font-size: 20px; font-weight: 750; }
+>>>>>>> c0eac0f90093127ac4f1b4de318a3665d4e1d9ad
 .chat-heading p { display: flex; align-items: center; gap: 7px; margin: 0; color: #71808b; font-size: 12px; }
 .status-dot { width: 7px; height: 7px; display: inline-block; border-radius: 50%; background: #20a66a; }
 .reset-button { color: #5b6d78; }
